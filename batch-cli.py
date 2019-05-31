@@ -118,6 +118,9 @@ if __name__ == '__main__':
     parser.add_argument('--watch', action='store_true')
     args = CommandLineArgs(**parser.parse_args().__dict__)
 
+    session = boto3.session.Session()
+    region = session.region_name
+
     if len(args.job_status) < 1:
         args.job_status = list(JobStatus)
 
@@ -147,7 +150,7 @@ if __name__ == '__main__':
 
                 try:
                     log_stream_name = job_details_map[job.jobId]['container']['logStreamName']
-                    log_link = f" https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#logEventViewer:group=/aws/batch/job;stream={log_stream_name}"
+                    log_link = f" https://{region}.console.aws.amazon.com/cloudwatch/home?region={region}#logEventViewer:group=/aws/batch/job;stream={log_stream_name}"
                 except:
                     # This is probably an array or multi-node job
                     # print(job_details_map[job.jobId])
